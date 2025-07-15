@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CafeStars - Búsqueda</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #8B4513;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .header h1 a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #A0522D;
+            padding: 10px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.1em;
+            transition: color 0.3s, border-bottom 0.3s;
+            padding-bottom: 5px;
+        }
+
+        .nav a:hover {
+            color: #FFD700;
+            border-bottom: 2px solid #FFD700;
+        }
+
+        .search-section {
+            padding: 20px;
+            background-color: white;
+            margin-bottom: 10px;
+        }
+
+        .search-section input, .search-section select {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .search-section button {
+            padding: 10px 20px;
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .search-section button:hover {
+            background-color: #A0522D;
+        }
+
+        .cafe-list {
+            padding: 10px;
+        }
+
+        .cafe-item {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .cafe-item h2 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+
+        .cafe-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1><a href="Inicio.html">CafeStars</a></h1>
+        <div class="profile-icon">👤</div>
+    </div>
+
+    <div class="nav">
+        <a href="Buscador.html">Explorar cafeterías</a>
+        <a href="#">Pedidos</a>
+        <a href="#">Reseñas</a>
+    </div>
+
+    <div class="search-section">
+        <input type="text" id="nombre" placeholder="Nombre de la Cafetería">
+        <input type="text" id="menu" placeholder="Tipo de café o menú">
+        <input type="text" id="ubicacion" placeholder="Ubicación (Ej: San Pedro, Desamparados Calle Fallas, etc.)">
+        <button onclick="buscar()">Buscar</button>
+    </div>
+
+    <div id="resultados" class="cafe-list"></div>
+
+    <script>
+        function buscar() {
+            const nombre = document.getElementById('nombre').value;
+            const menu = document.getElementById('menu').value;
+            const ubicacion = document.getElementById('ubicacion').value;
+
+            fetch(`http://localhost:8080/cafeterias/buscar?nombre=${nombre}&menu=${menu}&ubicacion=${ubicacion}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultados = document.getElementById('resultados');
+                    resultados.innerHTML = '';
+                    if (data.length === 0) {
+                        resultados.innerHTML = '<p>No se encontraron cafeterías que coincidan con los filtros.</p>';
+                    }
+                    data.forEach(cafe => {
+                        resultados.innerHTML += `
+                            <div class="cafe-item">
+                                <h2>${cafe.nombreCafeteria}</h2>
+                                <p>Menú: ${cafe.menu}</p>
+                                <p>Ubicación: ${cafe.ubicacion}</p>
+                                <p>Horario: ${cafe.horario}</p>
+                            </div>
+                        `;
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
+
