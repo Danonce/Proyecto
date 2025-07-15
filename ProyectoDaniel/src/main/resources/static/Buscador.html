@@ -133,7 +133,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             const menu = document.getElementById('menu').value;
             const ubicacion = document.getElementById('ubicacion').value;
 
-            fetch(`http://localhost:8080/cafeterias/buscar?nombre=${nombre}&menu=${menu}&ubicacion=${ubicacion}`)
+            fetch(`http://localhost:80/cafeterias/buscar?nombre=${nombre}&menu=${menu}&ubicacion=${ubicacion}`)
                 .then(response => response.json())
                 .then(data => {
                     const resultados = document.getElementById('resultados');

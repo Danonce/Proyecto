@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CafeStars - Información Cafetería</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #8B4513;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #A0522D;
+            padding: 10px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.1em;
+        }
+        .detailed-view {
+            padding: 20px;
+            background-color: white;
+        }
+        .carrusel img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .detailed-view h2 {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+        .detailed-view p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .review {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .review p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><a href="Inicio.html" style="color:white; text-decoration:none;">CafeStars</a></h1>
+        <div class="profile-icon">👤</div>
+    </div>
+
+    <div class="nav">
+        <a href="Buscador.html">Explorar cafeterías</a>
+        <a href="#">Pedidos</a>
+        <a href="#">Reseñas</a>
+    </div>
+
+    <div class="detailed-view">
+        <h2></h2>
+        <p class="menu"></p>
+        <p class="ubicacion"></p>
+        <p class="horario"></p>
+        <div class="carrusel"></div>
+
+        <h3>Reseñas</h3>
+        <div class="resenas"></div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+
+        fetch(`http://localhost:80/cafeterias/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                const cafe = data.cafeteria;
+                const resenas = data.resenas;
+
+                document.querySelector('h2').innerText = cafe.nombreCafeteria;
+                document.querySelector('.menu').innerText = 'Menú: ' + cafe.menu;
+                document.querySelector('.ubicacion').innerText = 'Ubicación: ' + cafe.ubicacion;
+                document.querySelector('.horario').innerText = 'Horario: ' + cafe.horario;
+
+                const imagenes = [1, 2, 3].map(i => `<img src="/imgCafeterias/${id}/${i}.jpg" alt="Imagen ${i}">`).join('');
+                document.querySelector('.carrusel').innerHTML = imagenes;
+
+                const resenasHtml = resenas.map(r => `
+                    <div class="review">
+                        <p>Calificación: ${r.calificacion}/10</p>
+                        <p>${r.nombre} - ${r.comentario}</p>
+                    </div>
+                `).join('');
+                document.querySelector('.resenas').innerHTML = resenasHtml;
+            });
+    </script>
+</body>
+</html>
