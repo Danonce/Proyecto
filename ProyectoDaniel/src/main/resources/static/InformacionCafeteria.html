@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CafeStars - Información Cafetería</title>
     <style>
         body {
@@ -16,16 +16,15 @@
             color: white;
             text-align: center;
             padding: 20px;
-            position: relative;
         }
-        .header h1 {
-            margin: 0;
-            font-size: 2.5em;
+        .header h1 a {
+            color: white;
+            text-decoration: none;
         }
         .nav {
             display: flex;
             justify-content: center;
-            background-color: #A0522D;
+            background-color: #8B4513;
             padding: 10px;
         }
         .nav a {
@@ -34,15 +33,47 @@
             margin: 0 20px;
             font-size: 1.1em;
         }
+        .nav a:hover {
+            color: #FFD700; /* Dorado */
+            border-bottom: 2px solid #FFD700;
+        }
         .detailed-view {
             padding: 20px;
             background-color: white;
+            max-width: 600px;
+            margin: auto;
+        }
+        .carrusel {
+            position: relative;
+            margin-bottom: 20px;
         }
         .carrusel img {
             width: 100%;
             height: auto;
-            margin-bottom: 10px;
             border-radius: 8px;
+            display: none;
+        }
+        .carrusel img.active {
+            display: block;
+        }
+        .carrusel button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            font-size: 2em;
+            padding: 0 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            user-select: none;
+        }
+        #prev {
+            left: 10px;
+        }
+        #next {
+            right: 10px;
         }
         .detailed-view h2 {
             margin: 10px 0;
@@ -56,6 +87,7 @@
             background-color: #f4f4f4;
             padding: 10px;
             margin-top: 10px;
+            border-radius: 5px;
         }
         .review p {
             margin: 5px 0;
@@ -64,8 +96,7 @@
 </head>
 <body>
     <div class="header">
-        <h1><a href="Inicio.html" style="color:white; text-decoration:none;">CafeStars</a></h1>
-        <div class="profile-icon">👤</div>
+        <h1><a href="Inicio.html">CafeStars</a></h1>
     </div>
 
     <div class="nav">
@@ -79,7 +110,11 @@
         <p class="menu"></p>
         <p class="ubicacion"></p>
         <p class="horario"></p>
-        <div class="carrusel"></div>
+
+        <div class="carrusel">
+            <button id="prev" aria-label="Imagen anterior">‹</button>
+            <button id="next" aria-label="Imagen siguiente">›</button>
+        </div>
 
         <h3>Reseñas</h3>
         <div class="resenas"></div>
@@ -100,17 +135,48 @@
                 document.querySelector('.ubicacion').innerText = 'Ubicación: ' + cafe.ubicacion;
                 document.querySelector('.horario').innerText = 'Horario: ' + cafe.horario;
 
-                const imagenes = [1, 2, 3].map(i => `<img src="/imgCafeterias/${id}/${i}.jpg" alt="Imagen ${i}">`).join('');
-                document.querySelector('.carrusel').innerHTML = imagenes;
+                // Insertar imágenes en carrusel
+                const carrusel = document.querySelector('.carrusel');
+                const imagenesHtml = [1, 2, 3].map(i =>
+                    `<img src="../imgCafeterias/${id}/${i}.jpg" alt="Imagen ${i}">`
+                ).join('');
+                // Insertar antes de los botones
+                carrusel.insertAdjacentHTML('afterbegin', imagenesHtml);
 
+                const imgs = carrusel.querySelectorAll('img');
+                let indiceActual = 0;
+
+                function mostrarImagen(indice) {
+                    imgs.forEach((img, i) => {
+                        img.classList.toggle('active', i === indice);
+                    });
+                }
+
+                mostrarImagen(indiceActual);
+
+                document.getElementById('prev').addEventListener('click', () => {
+                    indiceActual = (indiceActual - 1 + imgs.length) % imgs.length;
+                    mostrarImagen(indiceActual);
+                });
+
+                document.getElementById('next').addEventListener('click', () => {
+                    indiceActual = (indiceActual + 1) % imgs.length;
+                    mostrarImagen(indiceActual);
+                });
+
+                // Mostrar reseñas
                 const resenasHtml = resenas.map(r => `
                     <div class="review">
                         <p>Calificación: ${r.calificacion}/10</p>
-                        <p>${r.nombre} - ${r.comentario}</p>
+                        <p><strong>${r.nombre}</strong> - ${r.comentario}</p>
                     </div>
                 `).join('');
                 document.querySelector('.resenas').innerHTML = resenasHtml;
+            })
+            .catch(error => {
+                console.error('Error al cargar la cafetería:', error);
             });
     </script>
 </body>
 </html>
+

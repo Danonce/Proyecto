@@ -8,8 +8,8 @@ package com.proyectoDaniel.controller;
  *
  * @author danon
  */
-import com.proyectoDaniel.proyecto.model.Resena;
-import com.proyectoDaniel.proyecto.repository.ResenaRepository;
+import com.proyectoDaniel.entity.Resena;
+import com.proyectoDaniel.repository.ResenaRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class ResenaController {
     }
 
     @GetMapping("/cafeteria/{idCafeteria}")
-    public List<Resena> obtenerResenasPorCafeteria(@PathVariable Long idCafeteria) {
+    public List<Resena> obtenerResenasPorCafeteria(@PathVariable int idCafeteria) {
         return resenaRepository.findByIdcafeteria(idCafeteria);
     }
 }

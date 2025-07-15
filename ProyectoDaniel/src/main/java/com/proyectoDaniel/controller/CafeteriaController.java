@@ -10,10 +10,14 @@ package com.proyectoDaniel.controller;
  */
 import com.proyectoDaniel.Service.CafeteriaService;
 import com.proyectoDaniel.entity.Cafeteria;
+import com.proyectoDaniel.entity.Resena;
+import com.proyectoDaniel.repository.ResenaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cafeterias")
@@ -22,6 +26,9 @@ public class CafeteriaController {
 
     @Autowired
     private CafeteriaService service;
+
+    @Autowired
+    private ResenaRepository resenaRepository;
 
     @GetMapping("/todas")
     public List<Cafeteria> listarTodas() {
@@ -33,7 +40,6 @@ public class CafeteriaController {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String menu,
             @RequestParam(required = false) String ubicacion) {
-        
         if (nombre != null && !nombre.isEmpty()) {
             return service.buscarPorNombre(nombre);
         }
@@ -45,4 +51,16 @@ public class CafeteriaController {
         }
         return service.listarTodas();
     }
+
+    @GetMapping("/{id}")
+    public Map<String, Object> obtenerCafeteriaConResenas(@PathVariable Integer id) {
+        Map<String, Object> response = new HashMap<>();
+        Cafeteria cafeteria = service.obtenerPorId(id);
+        List<Resena> resenas = resenaRepository.findByIdcafeteria(id);
+        response.put("cafeteria", cafeteria);
+        response.put("resenas", resenas);
+        return response;
+    }
+
 }
+

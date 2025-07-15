@@ -35,5 +35,8 @@ public class CafeteriaService {
     public List<Cafeteria> listarTodas() {
         return repository.findAll();
     }
+    public Cafeteria obtenerPorId(Integer id) {
+        return repository.findById(id).orElse(null);
+    }
 }
 

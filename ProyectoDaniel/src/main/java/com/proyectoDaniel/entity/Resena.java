@@ -19,7 +19,6 @@ public class Resena {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idresena;
-
     private Long idcafeteria;
     private String nombre;
     private String correo;

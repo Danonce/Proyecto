@@ -11,6 +11,7 @@ package com.proyectoDaniel.repository;
 import com.proyectoDaniel.entity.Cafeteria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+import java.util.Optional;
 
 public interface CafeteriaRepository extends JpaRepository<Cafeteria, Integer> {
     List<Cafeteria> findByNombreCafeteriaContainingIgnoreCase(String nombre);
