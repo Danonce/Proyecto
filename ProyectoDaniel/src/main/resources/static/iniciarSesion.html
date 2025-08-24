@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión - CafeStars</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .form-container { width: 400px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; }
+        h2 { text-align: center; }
+        input { width: 100%; padding: 10px; margin: 8px 0; }
+        button { width: 100%; padding: 10px; background-color: #8B4513; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #A0522D; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Iniciar Sesión</h2>
+        <form id="loginForm">
+            <input type="email" id="correo" placeholder="Correo electrónico" required>
+            <input type="password" id="contrasena" placeholder="Contraseña" required>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e){
+            e.preventDefault();
+
+            const correo = document.getElementById("correo").value;
+            const contrasena = document.getElementById("contrasena").value;
+
+            fetch("http://localhost/usuarios/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ correo, contrasena })
+            }).then(res => {
+                if(!res.ok) throw new Error("Credenciales inválidas");
+                return res.json();
+            }).then(data => {
+                localStorage.setItem("idUsuario", data.idUsuario);
+                localStorage.setItem("nombreUsuario", data.nombreUsuario);
+                alert("Bienvenido " + data.nombreUsuario);
+                window.location.href = "Inicio.html";
+            }).catch(err => alert(err));
+        });
+    </script>
+</body>
+</html>
